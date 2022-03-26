@@ -1,12 +1,12 @@
-
+#include "Arduino.h"
 #include "Panda_segmentBed_I2C.h"
 
 
-//bool  i2c_write(uint8_t value);
+//bool  i2c_write(unsigned char value);
 //void  i2c_stop(void);
 
 //#define setLow(pin) {if (_pullup)  digitalWrite(pin, LOW); pinMode(pin, OUTPUT);}
-void    I2C_SegmentBED::setLow(uint8_t pin) {
+void    I2C_SegmentBED::setLow(unsigned char pin) {
       noInterrupts();
        pinMode(pin, OUTPUT);
    // if (_pullup) 
@@ -21,7 +21,7 @@ void    I2C_SegmentBED::setLow(uint8_t pin) {
 //#define i2c_stop() {setLow(I2C_BED_SDA); delayMicroseconds(DELAY); setHigh(I2C_BED_SCL);  delayMicroseconds(DELAY); setHigh(I2C_BED_SDA);delayMicroseconds(DELAY);}
 
 
-void   I2C_SegmentBED::setHigh(uint8_t pin) {
+void   I2C_SegmentBED::setHigh(unsigned char pin) {
  // digitalWrite(pin,1);
  // return;
      noInterrupts();
@@ -32,7 +32,7 @@ void   I2C_SegmentBED::setHigh(uint8_t pin) {
 
      interrupts();
 }
-bool  I2C_SegmentBED::i2c_init(uint8_t _sda,uint8_t _scl,unit8_t _addr) {
+bool  I2C_SegmentBED::i2c_init(unsigned char _sda,unsigned char _scl,unsigned char _addr) {
  I2C_BED_SDA=_sda;
  I2C_BED_SCL =_scl;
  I2C_7BITADDR = _addr;
@@ -48,7 +48,7 @@ bool  I2C_SegmentBED::i2c_init(uint8_t _sda,uint8_t _scl,unit8_t _addr) {
 // bit). 
 // Return: true if the slave replies with an "acknowledge", false otherwise
 
-bool  I2C_SegmentBED::i2c_start(uint8_t addr) {
+bool  I2C_SegmentBED::i2c_start(unsigned char addr) {
   setLow(I2C_BED_SDA);
   delayMicroseconds(DELAY);
   setLow(I2C_BED_SCL);
@@ -56,7 +56,7 @@ bool  I2C_SegmentBED::i2c_start(uint8_t addr) {
 }
 
 // Try to start transfer until an ACK is returned
-/*  i2c_start_wait(uint8_t addr) {
+/*  i2c_start_wait(unsigned char addr) {
   long retry = I2C_MAXWAIT;
   while (!i2c_start(addr)) {
     i2c_stop();
@@ -69,7 +69,7 @@ bool  I2C_SegmentBED::i2c_start(uint8_t addr) {
 // you can address another or the same chip again without an intervening 
 // stop condition.
 // Return: true if the slave replies with an "acknowledge", false otherwise
-bool  I2C_SegmentBED::i2c_rep_start(uint8_t addr) {
+bool  I2C_SegmentBED::i2c_rep_start(unsigned char addr) {
   setHigh(I2C_BED_SDA);
   setHigh(I2C_BED_SCL);
   delayMicroseconds(DELAY);
@@ -90,8 +90,8 @@ void  I2C_SegmentBED::i2c_stop(void) {
 // Write one byte to the slave chip that had been addressed
 // by the previous start call. <value> is the byte to be sent.
 // Return: true if the slave replies with an "acknowledge", false otherwise
-bool  I2C_SegmentBED::i2c_write(uint8_t value) {
-  for (uint8_t curr = 0X80; curr != 0; curr >>= 1) {
+bool  I2C_SegmentBED::i2c_write(unsigned char value) {
+  for (unsigned char curr = 0X80; curr != 0; curr >>= 1) {
     if (curr & value) {setHigh(I2C_BED_SDA);} else  setLow(I2C_BED_SDA); 
     setHigh(I2C_BED_SCL);
     delayMicroseconds(DELAY);
@@ -102,7 +102,7 @@ bool  I2C_SegmentBED::i2c_write(uint8_t value) {
   setHigh(I2C_BED_SDA);
   setHigh(I2C_BED_SCL);
   delayMicroseconds(DELAY);
-  uint8_t ack = digitalRead(I2C_BED_SDA);
+  unsigned char ack = digitalRead(I2C_BED_SDA);
   setLow(I2C_BED_SCL);
   delayMicroseconds(DELAY);  
   setLow(I2C_BED_SDA);
@@ -111,10 +111,10 @@ bool  I2C_SegmentBED::i2c_write(uint8_t value) {
 
 // Read one byte. If <last> is true, we send a NAK after having received 
 // the byte in order to terminate the read sequence. 
-uint8_t  I2C_SegmentBED::i2c_read(bool last) {
-  uint8_t b = 0;
+unsigned char  I2C_SegmentBED::i2c_read(bool last) {
+  unsigned char b = 0;
   setHigh(I2C_BED_SDA);
-  for (uint8_t i = 0; i < 8; i++) {
+  for (unsigned char i = 0; i < 8; i++) {
     b <<= 1;
     delayMicroseconds(DELAY);
     setHigh(I2C_BED_SCL);
