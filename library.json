@@ -1,0 +1,17 @@
+{
+  "name": "Panda_segmentBed_I2C",
+  "keywords": "3D printer, Panda segmented heat Bed, I2C",
+  "description": "A library for Control Panda segmentedd heat bed of 3d printer",
+  "repository":
+  {
+    "type": "git",
+    "url": "https://github.com/markniu/SoftMasterI2C.git"
+  },
+  "frameworks": "arduino",
+  "platforms":
+  [
+    "atmelavr",
+    "stm32",
+    "espressif8266"
+  ]
+}
