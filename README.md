@@ -45,4 +45,5 @@ Marlin firmware source code:https://github.com/markniu/PandaZHU just enbale ``` 
 
 
 
-### [where to buy](https://www.pandapi3d.com/product-page/panda-segmented-heat-bed)
+### [Support me](https://www.pandapi3d.com/product-page/panda-segmented-heat-bed)
+### [Support facebook](https://www.facebook.com/groups/380795976169477)
