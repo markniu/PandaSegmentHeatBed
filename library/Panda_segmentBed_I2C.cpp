@@ -173,3 +173,152 @@ void I2C_SegmentBED::I2C_read_str(char *dat_r,int addr)
   }
   i2c_stop();
 }
+////////////////////////////
+ 
+unsigned short I2C_SegmentBED::BD_Add_OddEven(unsigned short byte)
+{
+	unsigned char i;
+	unsigned char n; 
+	unsigned short r; 
+	n =0;
+  for(i=0;i<10;i++)
+	{
+	  if(((byte >>i)&0x01) == 0x01)
+		{
+		   n++;
+		}	
+	}
+	if((n&0x01) == 0x01)
+	{
+		r = byte | 0x400; 
+	}
+	else
+	{
+	  r = byte | 0x00;  
+	}
+	return r;
+}
+
+#define BYTE_CHECK_OK     0x01
+#define BYTE_CHECK_ERR    0x00
+/******************************************************************************************
+
+********************************************************************************************/
+unsigned short I2C_SegmentBED::BD_Check_OddEven(unsigned short byte)
+{
+	unsigned char i;
+	unsigned char n;  
+	unsigned char r;  
+	n =0;
+   for(i=0;i<10;i++) 
+	{
+	  if(((byte >>i)&0x01) == 0x01)
+		{
+		   n++;  
+		}	
+	}
+	if((byte>>10) == (n&0x01)) 
+	{
+		r = BYTE_CHECK_OK;  
+	}
+	else
+	{
+	  r = BYTE_CHECK_ERR;  
+	}
+	return r;
+}	
+
+void   I2C_SegmentBED::BD_setLow(unsigned char pin) {
+      noInterrupts();
+      pinMode(pin, OUTPUT);
+      digitalWrite(pin, LOW);
+      interrupts();
+}
+
+void    I2C_SegmentBED::BD_setHigh(unsigned char pin) {
+     noInterrupts();
+     pinMode(pin, INPUT_PULLUP);
+     interrupts();
+}
+
+void  I2C_SegmentBED::BD_set_force_High(unsigned char pin) {
+      noInterrupts();
+      pinMode(pin, OUTPUT);
+      digitalWrite(pin, HIGH);
+     interrupts();
+}
+
+
+bool I2C_SegmentBED::BD_I2C_start(void)
+{
+  BD_setHigh(I2C_BED_SCL);
+  BD_setHigh(I2C_BED_SDA);
+  delayMicroseconds(DELAY);
+  BD_setLow(I2C_BED_SDA);
+  delayMicroseconds(DELAY);
+  BD_setLow(I2C_BED_SCL);
+  delayMicroseconds(DELAY*2);
+
+}
+void  I2C_SegmentBED::BD_i2c_stop(void) {
+  delayMicroseconds(DELAY*2);
+  BD_setLow(I2C_BED_SDA);
+  delayMicroseconds(DELAY);
+  BD_setHigh(I2C_BED_SCL);
+  delayMicroseconds(DELAY);
+  BD_setHigh(I2C_BED_SDA);
+  delayMicroseconds(DELAY);
+}
+
+unsigned short I2C_SegmentBED::BD_i2c_read(void)
+{
+   
+  BD_I2C_start();
+  //// read
+  BD_setHigh(I2C_BED_SDA);
+  BD_setHigh(I2C_BED_SCL);
+  delayMicroseconds(DELAY*2);
+  BD_setLow(I2C_BED_SCL);
+  ///
+  delayMicroseconds(DELAY);
+  unsigned short b = 0;
+  BD_setHigh(I2C_BED_SDA);
+  for (unsigned char i = 0; i <= 10; i++) {
+    b <<= 1;
+    delayMicroseconds(DELAY);
+    BD_setHigh(I2C_BED_SCL);
+    delayMicroseconds(DELAY);
+    if (digitalRead(I2C_BED_SDA)) b |= 1;
+    BD_setLow(I2C_BED_SCL);
+  }
+  BD_i2c_stop();
+  return b;
+
+}
+
+void I2C_SegmentBED::BD_i2c_write(unsigned int addr)
+{
+ 
+  BD_I2C_start();
+  //// write
+  BD_setLow(I2C_BED_SDA);
+  BD_set_force_High(I2C_BED_SCL);
+  delayMicroseconds(DELAY);
+  BD_setLow(I2C_BED_SCL);
+  addr=BD_Add_OddEven(addr);
+  ///write address
+  delayMicroseconds(DELAY);
+  for (int i=10; i >=0; i--) 
+  {
+    if ((addr>>i)&0x01) {BD_set_force_High(I2C_BED_SDA);} else  BD_setLow(I2C_BED_SDA); 
+    //if (addr &curr) {set_force_High(I2C_BED_SDA);} else  setLow(I2C_BED_SDA); 
+    BD_set_force_High(I2C_BED_SCL);
+    delayMicroseconds(DELAY);
+    BD_setLow(I2C_BED_SCL);
+    delayMicroseconds(DELAY);
+  }
+  ////////////
+  BD_i2c_stop();
+  
+
+}

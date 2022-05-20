@@ -16,6 +16,13 @@ public:
 	bool i2c_init(unsigned char _sda,unsigned char _scl,unsigned char _addr);
 	void I2C_read_str(char *dat_r,int addr);
 	void I2C_send_str(char *dat_r,char send_now);	 
+//////////////////////
+	void BD_i2c_write(unsigned int addr);
+	unsigned short BD_i2c_read(void);
+	void  BD_i2c_stop(void);
+	bool  BD_I2C_start(void);
+	unsigned short BD_Check_OddEven(unsigned short byte);
+	unsigned short BD_Add_OddEven(unsigned short byte);
 
 private:
 	unsigned char I2C_BED_SDA,I2C_BED_SCL;
@@ -29,6 +36,11 @@ private:
 	void i2c_stop(void);
 	bool i2c_write(unsigned char value);
 	unsigned char i2c_read(bool last);
+//////////////////////
+void BD_setLow(unsigned char pin);
+void BD_setHigh(unsigned char pin) ;
+void BD_set_force_High(unsigned char pin);
+
 };
 
 #endif
