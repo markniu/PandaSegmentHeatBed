@@ -1,7 +1,7 @@
 {
-  "name": "Panda_segmentBed_I2C",
-  "version": "1.0.2",
-  "keywords": "3D printer, Panda segmented heat Bed, I2C",
+  "name": "Panda segmentBed,Bed Distance sensor I2C",
+  "version": "1.0.3",
+  "keywords": "3D printer, Panda segmented heat Bed,Bed Distance sensor, I2C",
   "description": "A library for Control Panda segmentedd heat bed of 3d printer",
   "repository":
   {
