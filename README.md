@@ -28,7 +28,7 @@ Signal connector:I2C
 communication protocol: Gcode,Sending heating Gcode M140 or M190,and then with G1 or G0 sending X and Y positon
 for example: 
 ```c
-M190 S60  
+M140 S60  
 G1 X100 Y10 
 ``` 
 it will heating the second Zone where the position (100,10) is.
